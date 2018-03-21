@@ -639,47 +639,6 @@ HRESULT Explorerplusplus::UpdateStatusBarText(void)
 	return S_OK;
 }
 
-/*
-RUNS IN CONTEXT OF DIRECTORY MOINTORING WORKER THREAD.
-Possible bugs:
- - The tab may exist at the point of call that checks
-   whether or not the tab index has been freed. However,
-   it's possible it may not exist directly after.
-   Therefore, use a critical section to ensure a tab cannot
-   be freed until at least this call completes.
-
-   If this runs before the tab is freed, the tab existence
-   check will succeed, the shell browser function will be called
-   and this function will exit.
-   If this runs after the tab is freed, the tab existence
-   check will fail, and the shell browser function won't be called.
-*/
-void Explorerplusplus::DirectoryAlteredCallback(const TCHAR *szFileName,DWORD dwAction,
-void *pData)
-{
-	DirectoryAltered_t	*pDirectoryAltered = NULL;
-	Explorerplusplus			*pContainer = NULL;
-
-	EnterCriticalSection(&g_csDirMonCallback);
-
-	pDirectoryAltered = (DirectoryAltered_t *)pData;
-	pContainer = (Explorerplusplus *)pDirectoryAltered->pData;
-
-	/* Does this tab still exist? */
-	if(pContainer->m_uTabMap[pDirectoryAltered->iIndex] == 1)
-	{
-		TCHAR szDirectory[MAX_PATH];
-		pContainer->m_pShellBrowser[pDirectoryAltered->iIndex]->QueryCurrentDirectory(SIZEOF_ARRAY(szDirectory),szDirectory);
-		LOG(debug) << _T("Directory change notification received for \"") << szDirectory << _T("\", Action = ") << dwAction
-			<< _T(", Filename = \"") << szFileName << _T("\"");
-
-		pContainer->m_pShellBrowser[pDirectoryAltered->iIndex]->FilesModified(dwAction,
-			szFileName,pDirectoryAltered->iIndex,pDirectoryAltered->iFolderIndex);
-	}
-
-	LeaveCriticalSection(&g_csDirMonCallback);
-}
-
 void FolderSizeCallbackStub(int nFolders,int nFiles,PULARGE_INTEGER lTotalFolderSize,LPVOID pData)
 {
 	Explorerplusplus::FolderSizeExtraInfo_t *pfsei = reinterpret_cast<Explorerplusplus::FolderSizeExtraInfo_t *>(pData);

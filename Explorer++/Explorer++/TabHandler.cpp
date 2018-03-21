@@ -555,7 +555,6 @@ HRESULT Explorerplusplus::RestoreTabs(ILoadSave *pLoadSave)
 	TCHAR							szDirectory[MAX_PATH];
 	HRESULT							hr;
 	int								nTabsCreated = 0;
-	int								i = 0;
 
 	if(!g_TabDirs.empty())
 	{
@@ -604,22 +603,6 @@ HRESULT Explorerplusplus::RestoreTabs(ILoadSave *pLoadSave)
 	{
 		/* Should never end up here. */
 		return E_FAIL;
-	}
-
-	/* Tabs created on startup will NOT have
-	any automatic updates. The only thing that
-	needs to be done is to monitor each
-	directory. The tab that is finally switched
-	to will have an associated update of window
-	states. */
-	for(i = 0;i < nTabsCreated;i++)
-	{
-		TC_ITEM tcItem;
-
-		tcItem.mask	= TCIF_PARAM;
-		TabCtrl_GetItem(m_hTabCtrl,i,&tcItem);
-
-		HandleDirectoryMonitoring((int)tcItem.lParam);
 	}
 
 	if(!m_bAlwaysShowTabBar)
@@ -865,11 +848,7 @@ bool Explorerplusplus::CloseTab(int TabIndex)
 	RemoveTabFromControl(TabIndex);
 	RemoveTabProxy(iInternalIndex);
 
-	EnterCriticalSection(&g_csDirMonCallback);
 	ReleaseTabId(iInternalIndex);
-	LeaveCriticalSection(&g_csDirMonCallback);
-
-	m_pDirMon->StopDirectoryMonitor(m_pShellBrowser[iInternalIndex]->GetDirMonitorId());
 
 	m_pShellBrowser[iInternalIndex]->SetTerminationStatus();
 	m_pShellBrowser[iInternalIndex]->Release();
