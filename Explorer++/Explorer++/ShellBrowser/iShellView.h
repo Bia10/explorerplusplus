@@ -8,7 +8,6 @@
 #include "../Helper/Macros.h"
 
 #define WM_USER_UPDATEWINDOWS		(WM_APP + 17)
-#define WM_USER_FILESADDED			(WM_APP + 51)
 #define WM_USER_STARTEDBROWSING		(WM_APP + 55)
 #define WM_USER_NEWITEMINSERTED		(WM_APP + 200)
 #define WM_USER_FOLDEREMPTY			(WM_APP + 201)
@@ -370,7 +369,6 @@ public:
 	/* Directory modification support. */
 	void				StartDirectoryMonitoring(PCIDLIST_ABSOLUTE pidl);
 	void				StopDirectoryMonitoring();
-	void				FilesModified(DWORD Action, const TCHAR *FileName, int EventId, int iFolderIndex);
 	void				DirectoryAltered(void);
 	int					GetFolderIndex(void) const;
 

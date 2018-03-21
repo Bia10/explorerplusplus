@@ -25,7 +25,6 @@
 #include "../Helper/Macros.h"
 
 
-void CALLBACK	TimerProc(HWND hwnd,UINT uMsg,UINT_PTR idEvent,DWORD dwTime);
 void CALLBACK	FindIconAPC(ULONG_PTR dwParam);
 BOOL			RemoveFromIconFinderQueue(ListViewInfo_t *pListViewInfo,HANDLE hStopEvent);
 

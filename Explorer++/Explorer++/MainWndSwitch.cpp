@@ -99,14 +99,6 @@ LRESULT CALLBACK Explorerplusplus::WindowProcedure(HWND hwnd,UINT Msg,WPARAM wPa
 		UpdateWindowStates();
 		break;
 
-	case WM_USER_FILESADDED:
-		/* Runs in the context of the main thread. Either
-		occurs after the specified tab index has been
-		freed (in which case nothing happens), or before. */
-		if(CheckTabIdStatus((int)wParam))
-			m_pShellBrowser[static_cast<int>(wParam)]->DirectoryAltered();
-		break;
-
 	case WM_USER_TREEVIEW_GAINEDFOCUS:
 		m_hLastActiveWindow = m_hTreeView;
 		break;
