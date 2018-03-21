@@ -61,6 +61,8 @@ HRESULT CShellBrowser::BrowseFolder(LPCITEMIDLIST pidlDirectory,UINT wFlags)
 		return E_FAIL;
 	}
 
+	StopDirectoryMonitoring();
+
 	EmptyIconFinderQueue();
 	EmptyThumbnailsQueue();
 	EmptyColumnQueue();
@@ -127,6 +129,8 @@ HRESULT CShellBrowser::BrowseFolder(LPCITEMIDLIST pidlDirectory,UINT wFlags)
 	m_bFolderVisited = TRUE;
 
 	SetCursor(LoadCursor(NULL,IDC_ARROW));
+
+	StartDirectoryMonitoring(pidlDirectory);
 
 	m_iUniqueFolderIndex++;
 

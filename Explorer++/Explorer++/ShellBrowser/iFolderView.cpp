@@ -76,7 +76,8 @@ HANDLE hFolderSizeThread) :
 m_hOwner(hOwner),
 m_hListView(hListView),
 m_hThread(hIconThread),
-m_hFolderSizeThread(hFolderSizeThread)
+m_hFolderSizeThread(hFolderSizeThread),
+m_shChangeNotifyId(0)
 {
 	m_iRefCount = 1;
 
@@ -156,10 +157,19 @@ m_hFolderSizeThread(hFolderSizeThread)
 	m_hIconEvent = CreateEvent(NULL,TRUE,TRUE,NULL);
 	m_hColumnQueueEvent = CreateEvent(NULL,TRUE,TRUE,NULL);
 	m_hFolderQueueEvent = CreateEvent(NULL,TRUE,TRUE,NULL);
+
+	m_ListViewSubclassed = SetWindowSubclass(hListView, ListViewProcStub, LISTVIEW_SUBCLASS_ID, reinterpret_cast<DWORD_PTR>(this));
 }
 
 CShellBrowser::~CShellBrowser()
 {
+	StopDirectoryMonitoring();
+
+	if (m_ListViewSubclassed)
+	{
+		RemoveWindowSubclass(m_hListView, ListViewProcStub, LISTVIEW_SUBCLASS_ID);
+	}
+
 	EmptyIconFinderQueue();
 	EmptyThumbnailsQueue();
 	EmptyColumnQueue();

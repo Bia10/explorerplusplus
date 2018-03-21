@@ -368,6 +368,8 @@ public:
 	void				SetId(int ID);
 
 	/* Directory modification support. */
+	void				StartDirectoryMonitoring(PCIDLIST_ABSOLUTE pidl);
+	void				StopDirectoryMonitoring();
 	void				FilesModified(DWORD Action, const TCHAR *FileName, int EventId, int iFolderIndex);
 	void				DirectoryAltered(void);
 	int					GetFolderIndex(void) const;
@@ -557,6 +559,10 @@ private:
 	static const int THUMBNAIL_ITEM_HORIZONTAL_SPACING = 20;
 	static const int THUMBNAIL_ITEM_VERTICAL_SPACING = 20;
 
+	static const UINT WM_APP_SHELL_NOTIFY = WM_APP + 100;
+
+	static const UINT_PTR LISTVIEW_SUBCLASS_ID = 0;
+
 	CShellBrowser(HWND hOwner, HWND hListView,
 		const InitialSettings_t *pSettings, HANDLE hIconThread,
 		HANDLE hFolderSizeThread);
@@ -580,6 +586,9 @@ private:
 	int inline			SetItemInformation(LPITEMIDLIST pidlDirectory, LPITEMIDLIST pidlRelative, const TCHAR *szFileName);
 	void				ResetFolderMemoryAllocations(void);
 	void				SetCurrentViewModeInternal(UINT ViewMode);
+
+	static LRESULT CALLBACK	ListViewProcStub(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData);
+	LRESULT CALLBACK	ListViewProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	/* Sorting. */
 	int CALLBACK		Sort(int InternalIndex1,int InternalIndex2) const;
@@ -725,6 +734,7 @@ private:
 	int					m_iRefCount;
 
 	HWND				m_hListView;
+	BOOL				m_ListViewSubclassed;
 	HWND				m_hOwner;
 
 	BOOL				m_bPerformingDrag;
@@ -790,6 +800,9 @@ private:
 
 	/* ID. */
 	int					m_ID;
+
+	/* Directory monitoring. */
+	ULONG				m_shChangeNotifyId;
 
 	/* Stores information on files that
 	have been modified (i.e. created, deleted,
