@@ -1264,10 +1264,6 @@ void CShellBrowser::ResetFolderMemoryAllocations(void)
 		LeaveCriticalSection(&g_csThumbnails);
 	}
 
-	EnterCriticalSection(&m_csDirectoryAltered);
-	m_AlteredList.clear();
-	LeaveCriticalSection(&m_csDirectoryAltered);
-
 	m_iCurrentAllocation = DEFAULT_MEM_ALLOC;
 
 	m_pwfdFiles = (WIN32_FIND_DATA *)realloc(m_pwfdFiles,

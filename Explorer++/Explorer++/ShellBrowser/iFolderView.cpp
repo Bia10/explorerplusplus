@@ -132,7 +132,6 @@ m_shChangeNotifyId(0)
 
 	InitializeItemMap(0,m_iCurrentAllocation);
 
-	InitializeCriticalSection(&m_csDirectoryAltered);
 	InitializeCriticalSection(&m_column_cs);
 	InitializeCriticalSection(&m_folder_cs);
 
@@ -184,7 +183,6 @@ CShellBrowser::~CShellBrowser()
 
 	DeleteCriticalSection(&m_folder_cs);
 	DeleteCriticalSection(&m_column_cs);
-	DeleteCriticalSection(&m_csDirectoryAltered);
 
 	int nItems = ListView_GetItemCount(m_hListView);
 

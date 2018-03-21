@@ -369,7 +369,6 @@ public:
 	/* Directory modification support. */
 	void				StartDirectoryMonitoring(PCIDLIST_ABSOLUTE pidl);
 	void				StopDirectoryMonitoring();
-	void				DirectoryAltered(void);
 	int					GetFolderIndex(void) const;
 
 	/* Item information. */
@@ -522,13 +521,6 @@ private:
 		PRINTER_INFORMATION_TYPE_MODEL
 	};
 
-	struct AlteredFile_t
-	{
-		TCHAR	szFileName[MAX_PATH];
-		DWORD	dwAction;
-		int		iFolderIndex;
-	};
-
 	struct AwaitingAdd_t
 	{
 		int		iItem;
@@ -659,8 +651,6 @@ private:
 	void				RemoveItem(int iItemInternal);
 	void				RemoveItemInternal(const TCHAR *szFileName);
 	void				ModifyItemInternal(const TCHAR *FileName);
-	void				OnFileActionRenamedOldName(const TCHAR *szFileName);
-	void				OnFileActionRenamedNewName(const TCHAR *szFileName);
 	void				RenameItem(int iItemInternal, const TCHAR *szNewFileName);
 	int					DetermineItemSortedPosition(LPARAM lParam) const;
 
@@ -806,8 +796,6 @@ private:
 	/* Stores information on files that
 	have been modified (i.e. created, deleted,
 	renamed, etc). */
-	CRITICAL_SECTION	m_csDirectoryAltered;
-	std::list<AlteredFile_t>	m_AlteredList;
 	std::list<Added_t>	m_FilesAdded;
 
 	/* Stores information on files that have
