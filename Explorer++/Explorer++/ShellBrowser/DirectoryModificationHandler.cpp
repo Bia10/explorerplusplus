@@ -67,7 +67,7 @@ void CShellBrowser::OnShellNotify(WPARAM wParam, LPARAM lParam)
 	SHChangeNotification_Unlock(lock);
 }
 
-void CShellBrowser::OnFileActionAdded(const TCHAR *szFileName)
+void CShellBrowser::AddItem(const TCHAR *szFileName)
 {
 	IShellFolder	*pShellFolder = NULL;
 	LPITEMIDLIST	pidlFull = NULL;
@@ -163,7 +163,7 @@ void CShellBrowser::OnFileActionAdded(const TCHAR *szFileName)
 	}
 }
 
-void CShellBrowser::RemoveItemInternal(const TCHAR *szFileName)
+void CShellBrowser::RemoveItem(const TCHAR *szFileName)
 {
 	int iItemInternal = LocateFileItemInternalIndex(szFileName);
 
@@ -176,7 +176,7 @@ void CShellBrowser::RemoveItemInternal(const TCHAR *szFileName)
 /*
  * Modifies the attributes of an item currently in the listview.
  */
-void CShellBrowser::ModifyItemInternal(const TCHAR *FileName)
+void CShellBrowser::ModifyItem(const TCHAR *FileName)
 {
 	HANDLE			hFirstFile;
 	ULARGE_INTEGER	ulFileSize;
