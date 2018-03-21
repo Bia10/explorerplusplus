@@ -173,6 +173,59 @@ void CShellBrowser::RemoveItem(const TCHAR *szFileName)
 	}
 }
 
+void CShellBrowser::RemoveItem(int iItemInternal)
+{
+	ULARGE_INTEGER	ulFileSize;
+	LVFINDINFO		lvfi;
+	BOOL			bFolder;
+	int				iItem;
+	int				nItems;
+
+	if (iItemInternal == -1)
+		return;
+
+	CoTaskMemFree(m_pExtraItemInfo[iItemInternal].pridl);
+
+	/* Is this item a folder? */
+	bFolder = (m_pwfdFiles[iItemInternal].dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) ==
+		FILE_ATTRIBUTE_DIRECTORY;
+
+	/* Take the file size of the removed file away from the total
+	directory size. */
+	ulFileSize.LowPart = m_pwfdFiles[iItemInternal].nFileSizeLow;
+	ulFileSize.HighPart = m_pwfdFiles[iItemInternal].nFileSizeHigh;
+
+	m_ulTotalDirSize.QuadPart -= ulFileSize.QuadPart;
+
+	/* Locate the item within the listview.
+	Could use filename, providing removed
+	items are always deleted before new
+	items are inserted. */
+	lvfi.flags = LVFI_PARAM;
+	lvfi.lParam = iItemInternal;
+	iItem = ListView_FindItem(m_hListView, -1, &lvfi);
+
+	if (iItem != -1)
+	{
+		/* Remove the item from the listview. */
+		ListView_DeleteItem(m_hListView, iItem);
+	}
+
+	/* Invalidate the items internal data.
+	This will mark it as free, so that it
+	can be used by another item. */
+	m_pItemMap[iItemInternal] = 0;
+
+	nItems = ListView_GetItemCount(m_hListView);
+
+	m_nTotalItems--;
+
+	if (nItems == 0 && !m_bApplyFilter)
+	{
+		SendMessage(m_hOwner, WM_USER_FOLDEREMPTY, m_ID, TRUE);
+	}
+}
+
 /*
  * Modifies the attributes of an item currently in the listview.
  */
