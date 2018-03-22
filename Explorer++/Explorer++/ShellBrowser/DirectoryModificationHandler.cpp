@@ -64,6 +64,14 @@ void CShellBrowser::OnShellNotify(WPARAM wParam, LPARAM lParam)
 
 	switch (event)
 	{
+	case SHCNE_MKDIR:
+	case SHCNE_CREATE:
+		if (ILIsParent(m_pidlDirectory, pidls[0], TRUE))
+		{
+			AddItem(pidls[0]);
+		}
+		break;
+
 	case SHCNE_RENAMEFOLDER:
 	case SHCNE_RENAMEITEM:
 		if (ILIsParent(m_pidlDirectory, pidls[0], TRUE) && ILIsParent(m_pidlDirectory, pidls[1], TRUE))
@@ -76,7 +84,7 @@ void CShellBrowser::OnShellNotify(WPARAM wParam, LPARAM lParam)
 		}
 		else if (ILIsParent(m_pidlDirectory, pidls[1], TRUE))
 		{
-			/* TODO: Add item. */
+			AddItem(pidls[1]);
 		}
 		break;
 
