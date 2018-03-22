@@ -70,7 +70,6 @@ HRESULT CShellBrowser::BrowseFolder(LPCITEMIDLIST pidlDirectory,UINT wFlags)
 
 	/* TODO: Wait for any background threads to finish processing. */
 
-	m_FilesAdded.clear();
 	m_FileSelectionList.clear();
 
 	TCHAR szParsingPath[MAX_PATH];

@@ -1624,7 +1624,14 @@ void CShellBrowser::OnDeviceChange(WPARAM wParam,LPARAM lParam)
 					}
 					else
 					{
-						AddItem(szDrive);
+						LPITEMIDLIST pidlDrive;
+						HRESULT hr = GetIdlFromParsingName(szDrive, &pidlDrive);
+
+						if (SUCCEEDED(hr))
+						{
+							AddItem(pidlDrive);
+							CoTaskMemFree(pidlDrive);
+						}
 					}
 				}
 			}

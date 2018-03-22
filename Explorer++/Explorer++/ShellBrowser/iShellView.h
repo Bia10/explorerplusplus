@@ -530,11 +530,6 @@ private:
 		int		iAfter;
 	};
 
-	struct Added_t
-	{
-		TCHAR szFileName[MAX_PATH];
-	};
-
 	struct DroppedFile_t
 	{
 		TCHAR szFileName[MAX_PATH];
@@ -647,7 +642,7 @@ private:
 	
 	/* Directory altered support. */
 	void				OnShellNotify(WPARAM wParam, LPARAM lParam);
-	void				AddItem(const TCHAR *szFileName);
+	void				AddItem(PCIDLIST_ABSOLUTE pidl);
 	void				RemoveItem(int iItemInternal);
 	void				RemoveItem(PCIDLIST_ABSOLUTE pidl);
 	void				ModifyItem(const TCHAR *FileName);
@@ -793,11 +788,6 @@ private:
 
 	/* Directory monitoring. */
 	ULONG				m_shChangeNotifyId;
-
-	/* Stores information on files that
-	have been modified (i.e. created, deleted,
-	renamed, etc). */
-	std::list<Added_t>	m_FilesAdded;
 
 	/* Stores information on files that have
 	been created and are awaiting insertion
