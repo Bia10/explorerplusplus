@@ -13,6 +13,7 @@
 
 #include "stdafx.h"
 #include <list>
+#include <boost/scope_exit.hpp>
 #include "IShellView.h"
 #include "iShellBrowser_internal.h"
 #include "../Helper/Controls.h"
@@ -236,6 +237,41 @@ int CShellBrowser::LocateFileItemIndex(const TCHAR *szFileName) const
 		iItem			= ListView_FindItem(m_hListView,-1,&lvFind);
 
 		return iItem;
+	}
+
+	return -1;
+}
+
+int CShellBrowser::LocateFileItemInternalIndex(PCIDLIST_ABSOLUTE pidl) const
+{
+	for (int i = 0; i < m_nTotalItems; i++)
+	{
+		LVITEM lvItem;
+		lvItem.mask = LVIF_PARAM;
+		lvItem.iItem = i;
+		lvItem.iSubItem = 0;
+		BOOL itemRetrieved = ListView_GetItem(m_hListView, &lvItem);
+
+		if (!itemRetrieved)
+		{
+			continue;
+		}
+
+		LPITEMIDLIST pidlComplete = ILCombine(m_pidlDirectory, m_pExtraItemInfo[lvItem.lParam].pridl);
+
+		// declaration of 'boost_scope_exit_aux_args' hides global declaration
+		#pragma warning(push)
+		#pragma warning(disable:4459)
+		BOOST_SCOPE_EXIT(pidlComplete)
+		{
+			CoTaskMemFree(pidlComplete);
+		} BOOST_SCOPE_EXIT_END
+		#pragma warning(pop)
+
+		if (CompareIdls(pidlComplete, pidl))
+		{
+			return static_cast<int>(lvItem.lParam);
+		}
 	}
 
 	return -1;
