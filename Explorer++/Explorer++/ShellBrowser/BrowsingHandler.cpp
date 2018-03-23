@@ -101,8 +101,6 @@ HRESULT CShellBrowser::BrowseFolder(LPCITEMIDLIST pidlDirectory,UINT wFlags)
 
 	BrowseVirtualFolder(pidl);
 
-	CoTaskMemFree(pidl);
-
 	/* Window updates needs these to be set. */
 	m_NumFilesSelected		= 0;
 	m_NumFoldersSelected	= 0;
@@ -127,7 +125,9 @@ HRESULT CShellBrowser::BrowseFolder(LPCITEMIDLIST pidlDirectory,UINT wFlags)
 
 	SetCursor(LoadCursor(NULL,IDC_ARROW));
 
-	StartDirectoryMonitoring(pidlDirectory);
+	StartDirectoryMonitoring(pidl);
+
+	CoTaskMemFree(pidl);
 
 	m_iUniqueFolderIndex++;
 
