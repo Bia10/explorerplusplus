@@ -600,6 +600,7 @@ private:
 
 	/* Listview column support. */
 	void				SetAllColumnText(void);
+	void				UpdateAllColumnsForItem(int itemIndex);
 	void				SetColumnText(UINT ColumnID,int ItemIndex,int ColumnIndex);
 	void				PlaceColumns(void);
 	std::wstring		GetColumnText(UINT ColumnID,int InternalIndex) const;

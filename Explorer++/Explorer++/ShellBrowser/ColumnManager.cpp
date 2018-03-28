@@ -240,20 +240,26 @@ void CShellBrowser::SetAllColumnText(void)
 
 	while(QueueNotEmpty)
 	{
-		int iColumnIndex = 0;
-
-		for(auto itr = m_pActiveColumnList->begin();itr != m_pActiveColumnList->end();itr++)
-		{
-			if(itr->bChecked)
-			{
-				SetColumnText(itr->id,ItemIndex,iColumnIndex++);
-			}
-		}
+		UpdateAllColumnsForItem(ItemIndex);
 
 		QueueNotEmpty = RemoveFromColumnQueue(&ItemIndex);
 	}
 
 	ApplyHeaderSortArrow();
+}
+
+void CShellBrowser::UpdateAllColumnsForItem(int itemIndex)
+{
+	int columnIndex = 0;
+
+	for (auto column : *m_pActiveColumnList)
+	{
+		if (column.bChecked)
+		{
+			SetColumnText(column.id, itemIndex, columnIndex);
+			columnIndex++;
+		}
+	}
 }
 
 void CShellBrowser::SetColumnText(UINT ColumnID,int ItemIndex,int ColumnIndex)

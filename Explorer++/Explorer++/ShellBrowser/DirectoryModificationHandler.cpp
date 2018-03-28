@@ -374,19 +374,7 @@ void CShellBrowser::ModifyItem(const TCHAR *FileName)
 
 			if(m_ViewMode == VM_DETAILS)
 			{
-				std::list<Column_t>::iterator itrColumn;
-				int iColumnIndex = 0;
-
-				if(m_pActiveColumnList != NULL)
-				{
-					for(itrColumn = m_pActiveColumnList->begin();itrColumn != m_pActiveColumnList->end();itrColumn++)
-					{
-						if(itrColumn->bChecked)
-						{
-							SetColumnText(itrColumn->id,iItem,iColumnIndex++);
-						}
-					}
-				}
+				UpdateAllColumnsForItem(iItem);
 			}
 
 			FindClose(hFirstFile);
