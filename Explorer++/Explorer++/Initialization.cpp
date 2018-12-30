@@ -162,8 +162,6 @@ void Explorerplusplus::OnCreate(void)
 	ImageList_Add(m_himlToolbarLarge, hb, NULL);
 	DeleteObject(hb);
 
-	CreateDirectoryMonitor(&m_pDirMon);
-
 	CreateStatusBar();
 	CreateMainControls();
 	InitializeDisplayWindow();
